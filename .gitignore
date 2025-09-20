@@ -5,6 +5,7 @@ backend/node_modules
 
 #Envirnment variables
 backend/.env
+frontend/.env
 
 # Logs
 logs

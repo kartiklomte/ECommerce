@@ -10,7 +10,7 @@ export const addNewProduct = createAsyncThunk('/products/addNewProduct',
     async(formData,thunkAPI)=>{
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/admin/products/addProduct',
+                `${process.env.VITE_BACKEND_SERVER}/api/admin/products/addProduct`,
                 formData,
                 { 
                     withCredentials: true,
@@ -30,7 +30,7 @@ export const viewProducts = createAsyncThunk('/products/viewProducts',
     async(thunkAPI)=>{
         try {
             const response = await axios.get(
-                'http://localhost:3000/api/admin/products/viewProducts',
+                `${process.env.VITE_BACKEND_SERVER}/api/admin/products/viewProducts`,
                 { 
                     withCredentials: true,
                 }
@@ -46,7 +46,7 @@ export const editProduct = createAsyncThunk('/products/editProduct',
     async({id, formData},thunkAPI)=>{
         try {
             const response = await axios.put(
-                `http://localhost:3000/api/admin/products/editProduct/${id}`,
+                `${process.env.VITE_BACKEND_SERVER}/api/admin/products/editProduct/${id}`,
                 formData,
                 { 
                     withCredentials: true,
@@ -66,7 +66,7 @@ export const deleteProduct = createAsyncThunk('/products/deleteProduct',
     async(id,thunkAPI)=>{
         try {
             const response = await axios.delete(
-                `http://localhost:3000/api/admin/products/deleteProduct/${id}`,
+                `${process.env.VITE_BACKEND_SERVER}/api/admin/products/deleteProduct/${id}`,
                 { 
                     withCredentials: true,
                 }

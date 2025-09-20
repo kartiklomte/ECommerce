@@ -11,7 +11,7 @@ const initialState ={
 const createNewOrder = createAsyncThunk('/order/createNewOrder',async(orderData)=>{
     try {
             const response = await axios.post(
-                `http://localhost:3000/api/user/order/create`,orderData,   
+                `${process.env.VITE_BACKEND_SERVER}/api/user/order/create`,orderData,   
             );
             return response.data;
         } catch (error) {

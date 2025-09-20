@@ -12,7 +12,7 @@ export const registerUser = createAsyncThunk('/auth/register',
     async(formData,thunkAPI)=>{
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/auth/register',
+                `${process.env.VITE_BACKEND_SERVER}/api/auth/register`,
                 formData,
                 { withCredentials: true }
             );
@@ -28,7 +28,7 @@ export const loginUser = createAsyncThunk('/auth/login',
     async(formData,thunkAPI)=>{
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/auth/login',
+                `${process.env.VITE_BACKEND_SERVER}/api/auth/login`,
                 formData,
                 { withCredentials: true }
             );
@@ -44,7 +44,7 @@ export const chechAuth = createAsyncThunk('/auth/checkauth',
     async(thunkAPI)=>{
         try {
             const response = await axios.get(
-                'http://localhost:3000/api/auth/checkauth',
+                `${process.env.VITE_BACKEND_SERVER}/api/auth/checkauth`,
                 { 
                     withCredentials: true,
                     headers : {
@@ -63,7 +63,7 @@ export const logoutUser = createAsyncThunk('/auth/logout',
     async(thunkAPI)=>{
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/auth/logout',
+                `${process.env.VITE_BACKEND_SERVER}/api/auth/logout`,
                 {},
                 { withCredentials: true }
             );

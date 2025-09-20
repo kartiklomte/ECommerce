@@ -18,7 +18,7 @@ const viewFilteredProducts = createAsyncThunk('/products/viewFilteredProducts',
 
         try {
             const response = await axios.get(
-                `http://localhost:3000/api/user/products/viewProducts?${query}`,
+                `${process.env.VITE_BACKEND_SERVER}/api/user/products/viewProducts?${query}`,
                 { 
                     withCredentials: true,
                 }
@@ -37,7 +37,7 @@ const viewProductsDetail = createAsyncThunk('/products/viewProductsDetail',
 
         try {
             const response = await axios.get(
-                `http://localhost:3000/api/user/products/viewProducts/${id}`,
+                `${process.env.VITE_BACKEND_SERVER}/api/user/products/viewProducts/${id}`,
                 { 
                     withCredentials: true,
                 }
