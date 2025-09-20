@@ -22,7 +22,7 @@ const registerUser = async(req,res)=>{
         const newUser = new User({
             userName,email,password:hashpass,
         })        
-        console.log("ready to save the data to dataset");
+        
         await newUser.save();
         return res.status(200).json({
             success : true,
@@ -63,7 +63,7 @@ const loginUser = async(req,res)=>{
             id : checkUser._id , role : checkUser.role, email : checkUser.email, userName: checkUser.userName
         }, 'CLIENT_SECRET_KEY',{expiresIn : '60m'});
 
-        res.cookie("token",token,{httpOnly : true, secure : true}).json({
+        res.cookie("token",token,{httpOnly : true, secure : true, sameSite : 'none'}).json({
             success : true,
             message : "log in successfull",
             user : {
