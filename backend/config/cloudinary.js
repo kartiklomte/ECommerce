@@ -6,9 +6,9 @@ dotenv.config();
 
 // for connecting the cloudinary. 
 cloudinary.config({
-    cloud_name: process.env.cloudName, 
-    api_key: process.env.apiKey, 
-    api_secret: process.env.apiSecret
+    cloud_name: process.env.CLOUD_NAME, 
+    api_key: process.env.API_KEY, 
+    api_secret: process.env.API_SECRET
 });
 
 const storage = new multer.memoryStorage();
