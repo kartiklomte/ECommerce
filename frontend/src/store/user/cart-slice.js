@@ -9,7 +9,7 @@ const initialState = {
 const addToCart = createAsyncThunk('cart/addToCart',async({userId,productId,quantity},thunkAPI)=>{
     try {
             const response = await axios.post(
-                `${process.env.VITE_BACKEND_SERVER}/api/user/cart/add`,
+                `${import.meta.env.VITE_BACKEND_SERVER}/api/user/cart/add`,
                 { 
                     userId,
                     productId,
@@ -26,7 +26,7 @@ const addToCart = createAsyncThunk('cart/addToCart',async({userId,productId,quan
 const fetchCartItems = createAsyncThunk('cart/fetchCartItems',async(userId,thunkAPI)=>{
     try {
             const response = await axios.get(
-                `${process.env.VITE_BACKEND_SERVER}/api/user/cart/get/${userId}`,
+                `${import.meta.env.VITE_BACKEND_SERVER}/api/user/cart/get/${userId}`,
                 { 
                     withCredentials: true,
                 }
@@ -40,7 +40,7 @@ const fetchCartItems = createAsyncThunk('cart/fetchCartItems',async(userId,thunk
 const updateCartItemQty = createAsyncThunk('cart/updateCartItemQty',async({userId,productId,quantity})=>{
     try {
             const response = await axios.put(
-                `${process.env.VITE_BACKEND_SERVER}/api/user/cart/update-cart`,
+                `${import.meta.env.VITE_BACKEND_SERVER}/api/user/cart/update-cart`,
                 { 
                     userId,
                     productId,
@@ -57,7 +57,7 @@ const updateCartItemQty = createAsyncThunk('cart/updateCartItemQty',async({userI
 const deleteCardItem = createAsyncThunk('cart/deleteCartItem',async({userId,productId})=>{
     try {
             const response = await axios.delete(
-                `${process.env.VITE_BACKEND_SERVER}/api/user/cart/${userId}/${productId}`,
+                `${import.meta.env.VITE_BACKEND_SERVER}/api/user/cart/${userId}/${productId}`,
                 { 
                     withCredentials: true,
                 }

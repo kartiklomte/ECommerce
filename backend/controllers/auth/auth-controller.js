@@ -54,7 +54,7 @@ const loginUser = async(req,res)=>{
         const passMatch = await bcrypt.compare(password,checkUser.password);
         if(!passMatch){
             return res.status(400).json({
-                success : true,
+                success : false,
                 message : "password does not match with the email"
             });
         }
@@ -63,7 +63,7 @@ const loginUser = async(req,res)=>{
             id : checkUser._id , role : checkUser.role, email : checkUser.email, userName: checkUser.userName
         }, 'CLIENT_SECRET_KEY',{expiresIn : '60m'});
 
-        res.cookie("token",token,{httpOnly : true, secure : false}).json({
+        res.cookie("token",token,{httpOnly : true, secure : true}).json({
             success : true,
             message : "log in successfull",
             user : {

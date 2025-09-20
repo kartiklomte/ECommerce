@@ -25,7 +25,7 @@ dbconn();
 // implementation of the cords,cookieParser and json
 app.use(
     cors({
-        origin : process.env.FRONTEND_UR || '*',
+        origin : process.env.FRONTEND_URL || '*',
         credentials: true  ,
         methods : ['GET','POST','DELETE','PUT'],
         allowedHeaders : [

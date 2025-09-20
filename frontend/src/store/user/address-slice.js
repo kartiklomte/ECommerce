@@ -9,7 +9,7 @@ const initialState = {
 const addNewAddress = createAsyncThunk('addresses/addNewAddress', async(formData,thunkAPI)=>{
     try {
             const response = await axios.post(
-                `${process.env.VITE_BACKEND_SERVER}/api/user/address/add`,formData
+                `${import.meta.env.VITE_BACKEND_SERVER}/api/user/address/add`,formData
             );
             return response.data;
         } catch (error) {
@@ -21,7 +21,7 @@ const addNewAddress = createAsyncThunk('addresses/addNewAddress', async(formData
 const fetchAllAddresses = createAsyncThunk('addresses/fetchAllAddresses', async(userId,thunkAPI)=>{
     try {
             const response = await axios.get(
-                `${process.env.VITE_BACKEND_SERVER}/api/user/address/get/${userId}`
+                `${import.meta.env.VITE_BACKEND_SERVER}/api/user/address/get/${userId}`
             );
             return response.data;
         } catch (error) {
@@ -33,7 +33,7 @@ const fetchAllAddresses = createAsyncThunk('addresses/fetchAllAddresses', async(
 const updateAddress = createAsyncThunk('addresses/updateAddress', async({userId,addressId,formData})=>{
     try {
             const response = await axios.put(
-                `${process.env.VITE_BACKEND_SERVER}/api/user/address/update/${userId}/${addressId}`,formData
+                `${import.meta.env.VITE_BACKEND_SERVER}/api/user/address/update/${userId}/${addressId}`,formData
             );
             return response.data;
         } catch (error) {
@@ -45,7 +45,7 @@ const updateAddress = createAsyncThunk('addresses/updateAddress', async({userId,
 const deleteAddress = createAsyncThunk('addresses/deleteAddress', async({userId,addressId},thunkAPI)=>{
     try {
             const response = await axios.delete(
-                `${process.env.VITE_BACKEND_SERVER}/api/user/address/delete/${userId}/${addressId}`
+                `${import.meta.env.VITE_BACKEND_SERVER}/api/user/address/delete/${userId}/${addressId}`
             );
             return response.data;
         } catch (error) {
