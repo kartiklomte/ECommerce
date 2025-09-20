@@ -17,7 +17,7 @@ const app = express();
 dotenv.config();
 
 // taking port form the .env file
-const port = process.env.port;
+const port = process.env.PORT;
 
 //connecting the database
 dbconn();
@@ -25,7 +25,7 @@ dbconn();
 // implementation of the cords,cookieParser and json
 app.use(
     cors({
-        origin : `${process.env.FRONTEND_UR}`,
+        origin : process.env.FRONTEND_UR || '*',
         credentials: true  ,
         methods : ['GET','POST','DELETE','PUT'],
         allowedHeaders : [
@@ -52,9 +52,9 @@ app.get('/', (req, res) => {
 });
 
 //implenting app listner port
-app.listen(port,()=>{
-    console.log(`app is running on port ${port}`);
-})
+// app.listen(port,()=>{
+//     console.log(`app is running on port ${port}`);
+// })
 
 module.exports = app;
 
