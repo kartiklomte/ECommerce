@@ -25,7 +25,7 @@ dbconn();
 // implementation of the cords,cookieParser and json
 app.use(
     cors({
-        origin : 'http://localhost:5173',
+        origin : `${process.env.FRONTEND_UR}`,
         credentials: true  ,
         methods : ['GET','POST','DELETE','PUT'],
         allowedHeaders : [
