@@ -47,6 +47,10 @@ app.use('/api/user/cart',userCartRouter);
 app.use('/api/user/address',userAddressRouter);
 app.use('/api/user/order',userOrderRouter);
 
+app.get('/', (req, res) => {
+  res.send('Backend is running!');
+});
+
 //implenting app listner port
 app.listen(port,()=>{
     console.log(`app is running on port ${port}`);
