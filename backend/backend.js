@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const dotenv = require('dotenv');
 const dbconn = require('./config/db');
 const cookieParser = require('cookie-parser');
@@ -27,19 +28,22 @@ dbconn();
 
 // implementation of the cords,cookieParser and json
 app.use(
-    cors({
-        origin : process.env.FRONTEND_URL || '*',
-        credentials: true  ,
-        methods : ['GET','POST','DELETE','PUT','OPTIONS'],
-        allowedHeaders : [
-            'Content-Type',
-            'Authorization',
-            'cache-control',
-            'Expires',
-            'Pragma'
-        ],
-    })
+  cors({
+    origin : process.env.FRONTEND_URL || '*',
+    credentials: true  ,
+    methods : ['GET','POST','DELETE','PUT','OPTIONS'],
+    allowedHeaders : [
+      'Content-Type',
+      'Authorization',
+      'cache-control',
+      'Expires',
+      'Pragma'
+    ],
+  })
 );
+
+// Enable gzip compression for all responses
+app.use(compression());
 
 // Fix Express 5 wildcard: match all paths with a regex for preflight
 app.options(/.*/, cors());
