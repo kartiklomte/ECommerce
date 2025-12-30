@@ -1,19 +1,24 @@
 pakages:
 
 1. Backend:
-    1. bcryptjs : for password hashing
-    2. cloudinary : used for uploading images to the cloud and getting the url of it
-    3. multer : used by the cloudinary to upload html file data
-    4. cookie-parser : used for handling http cookie
-    5. dotenv : for storing api's and the secreate keys
-    6. express: library for the node
-    7. jsonwebtoken : to create token which will use to maintain the state of authentication of user while reloading or navgating
-    8. mongoose : for managing scheema and data in mangoDB database
-    9. nodemon : for auto update or build the code / no need of restarting the server again and again 
-    10. cors : restrists the one domain to sent request to the other domain
+    1. bcryptjs         : for password hashing
+    2. cloudinary       : used for uploading images to the cloud and getting the url of it
+    3. multer           : used by the cloudinary to upload html file data
+    4. cookie-parser    : used for handling http cookie
+    6. express          : library for the node
+    5. dotenv           : for storing api's and the secreate keys
+    7. jsonwebtoken     : to create token which will use to maintain the state of authentication of user while reloading or navgating
+    8. mongoose         : for managing scheema and data in mangoDB database
+    9. nodemon          : for auto update or build the code / no need of restarting the server again and again 
+    10. cors            : restrists the one domain to sent request to the other domain  
 
 2. Fronend :
-    1. @reduxjs/toolkit: simplify and improve the Redux development
-    2. react-redux: It lets your React components read data from Redux store and dispatch actions to the store to update state
-    3. axios: it is used to send request form fronend(broser/react) to the backend(nodejs)
-    4. react-router-dom: for managing the routes
+    1. @reduxjs/toolkit : simplify and improve the Redux development
+    2. react-redux      : It lets your React components read data from Redux store and dispatch actions to the store to update state
+    3. axios            : it is used to send request form fronend(broser/react) to the backend(nodejs)
+    4. react-router-dom : for managing the routes
+
+
+3. Admin : 
+    1. Email            : aniketdeshmukh123@gmail.com
+    2. Password         : Password@123  

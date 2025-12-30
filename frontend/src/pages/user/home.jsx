@@ -1,7 +1,15 @@
 import { Button } from '@/components/ui/button'
+import banner from '../../assets/top_poster.png'
+import offer from '../../assets/offer.png'
+
 import bannerone from '../../assets/banner1.png'
 import bannertwo from '../../assets/banner2.png'
 import bannerthree from '../../assets/banner3.png'
+import bannerfour from '../../assets/banner4.png'
+import bannerfive from '../../assets/banner5.png'
+
+import catbg from '../../assets/cat-bg.jpg'
+import brandbg from '../../assets/brandbg.png'
 
 import adidas from '../../assets/company logos/adidas.png'
 import hm from '../../assets/company logos/h&m.png'
@@ -50,7 +58,7 @@ const UserHome = () => {
   ]
 
   // for combining all banners into one list
-  const slides =  [bannerone,bannertwo,bannerthree];
+  const slides =  [bannerone,bannertwo,bannerthree,bannerfour,bannerfive];
 
   // state for managing the slides changes
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -104,8 +112,13 @@ const UserHome = () => {
   return (
     <div className='flex flex-col min-h-screen'>
 
+      <div className='w-fit shadow-2xl mb-0.5 relative'>
+        <img src={banner} alt="banner" className='z-50'/>
+        <img src={offer} alt="offer" className='absolute h-full z-10 right-[22%] top-3 animate-bounce'/>
+      </div>
+
       {/** posters div */}
-      <div className='relative w-full h-[30vh] md:h-[60vh] lg:h-[90vh] overflow-hidden'>
+      <div className='relative w-full h-[25vh] md:h-[60vh] lg:h-[90vh] bg-purple-300 overflow-hidden'>
         {
           slides.map((slide,index)=> 
             <img src={slide} key={index} className={`${index === currentSlide ? 'opacity-100': 'opacity-0'} absolute top-0 left-0 w-full h-full object-fill lg:object-cover transition-opacity duration-1000`} />  
@@ -125,10 +138,10 @@ const UserHome = () => {
       </div>
 
       {/** shop by catagory section */}
-      <section className='py-12 bg-gray-50 w-full'>
-        <div className=' container mx-auto px-8 w-full'>
+      <section className={'py-12 h-full w-full bg-cover bg-center z-10'} style={{backgroundImage: `url(${catbg})`}}>
+        <div className=' container mx-auto px-8 w-full z-50'>
           <h2 className='text-3xl font-bold text-center mb-8'>Shop By Category</h2>
-          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mx-10'>
+          <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-10 w-[70%]'>
             {
               catagory.map(catagoryItem => <Card key={catagoryItem.id} onClick={()=>handleNavigationToListPage(catagoryItem,'category')} className={'cursor-pointer hover:shadow-2xl transition-shadow'}>
                 <CardContent className={'flex flex-col items-center justify-center p-6'}>
@@ -142,10 +155,13 @@ const UserHome = () => {
       </section>
 
       {/** shop by brand section */}
-      <section className='py-12 bg-gray-50 w-full'>
-        <div className=' container mx-auto px-8 w-full'>
-          <h2 className='text-3xl font-bold text-center mb-8'>Shop By Brand</h2>
-          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mx-10'>
+      <section className=' bg-gray-50 w-full flex flex-row overflow-hidden'>
+        <div className='hidden lg:flex'>
+          <img src={brandbg} alt="" className='w-fit h-full absolute z-10'/>
+        </div>
+        <div className=' pt-5 container lg:ml-[30%] sm:mx-auto px-8 w-full z-50'>
+          <h2 className='text-3xl font-bold text-center mb-2.5'>Shop By Brand</h2>
+          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 mb-6 mx-10 h-[70%]'>
             {
               brand.map(catagoryItem => <Card key={catagoryItem.id} onClick={()=>handleNavigationToListPage(catagoryItem,'brand')} className={'cursor-pointer hover:shadow-lg transition-shadow bg-blue-200'}>
                 <CardContent className={'flex flex-col items-center justify-center bg-blue-200 m-auto'}>
@@ -158,7 +174,7 @@ const UserHome = () => {
       </section>
 
       {/**product showcase section */}
-      <section className='p-12'>
+      <section className='p-12 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400' >
         <div className=' container mx-auto px-8 w-full'>
           <h2 className='text-3xl font-bold text-center mb-8'>Feature Products</h2>
         </div>

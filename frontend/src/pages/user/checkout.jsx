@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import CartItemContainer from '@/components/user/cartItemContainer'
 import { Button } from '@/components/ui/button'
 import { createNewOrder } from '@/store/user/order-slice'
+import { createRazorpayCheckoutOrder, openRazorpayCheckout } from '@/store/user/order-slice';
 
 const Checkout = () => {
 
@@ -25,7 +26,7 @@ const Checkout = () => {
         : 
             0;
 
-  function handleInitialPaypalPayment(){
+  async function handleCheckout(){
     const orderData = { 
       userId: user?.id,
       cartItems : cartItems.items.map(singleCartItem => ({
@@ -43,42 +44,52 @@ const Checkout = () => {
         phone: currentSelectedAddress?.phone,
         notes: currentSelectedAddress?.notes
       },
-      orderStatus : 'pending', //default
-      paymentMethod : 'paypal', //only one method taken
+      orderStatus : 'pending',
+      paymentMethod : 'razorpay',
       paymentStatus : 'pending',
       totalAmount : totalCartAmount,
       orderDate : new Date(),
       orderUpdateDate : new Date(),
       paymentId : '',
       playerId : '',
-    }
+    };
 
-    dispatch(createNewOrder(orderData)).then((data)=>{
-      if(data.payload.success){
+    const resp = await createRazorpayCheckoutOrder(orderData);
+    const { order, dbOrderId } = resp;
+    const keyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
+
+    openRazorpayCheckout({
+      keyId,
+      orderId: order.id,
+      amount: order.amount,
+      name: 'My Shop',
+      description: 'Order payment',
+      handler: async (response) => {
+        await fetch(`${import.meta.env.VITE_BACKEND_SERVER}/api/payments/razorpay/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            orderId: dbOrderId,
+          }),
+        });
         setPaymentStart(true);
-      }else{
-        setPaymentStart(false);
-      }
+      },
     });
   }
 
-  if(approvalURL){
-    window.location.href = approvalURL;
-  }
-  
   return (
     <div className='flex flex-col'>
       {/* header image */}
       <div className='relative h-[300] w-full overflow-hidden'>
         <img src={account} className='h-full w-full object-cover object-center'/>
       </div>
-
       {/* main selection */}
       <div className='grid grid-cols-1 sm:grid-cols-2 gap-7 mt-5 p-5'>
-
         {/*address selection */}
         <Address setCurrentSelectedAddress={setCurrentSelectedAddress}/>
-
         {/** cart items list with total price */}
         <div className='flex flex-col gap-4'>
           {
@@ -91,15 +102,11 @@ const Checkout = () => {
                 <span className='font-bold'>${totalCartAmount.toFixed(2)}</span>
             </div>
           </div>
-
           <div className='mt-4 w-full'>
-            <Button className={'w-full'} onClick={handleInitialPaypalPayment}>Checkout</Button>
+            <Button className={'w-full'} onClick={handleCheckout}>Checkout</Button>
           </div>
-
         </div>
-
       </div>
-
     </div>
   )
 }

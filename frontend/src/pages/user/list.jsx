@@ -10,12 +10,13 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 import { ArrowUpDown, ArrowUpSquare } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify';
 
 
 const List = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const {productList,productDetail} = useSelector(state => state.userProducts);
   const [filters,setFilters] = useState({});
   const [sort, setSort] = useState(null);
@@ -90,9 +91,10 @@ const List = () => {
 
   //set sort default to price - low to high and resume the filters store in the section when reloaded 
   useEffect(() => {
-    setSort('price-lowtohigh');
-    setFilters(JSON.parse(sessionStorage.getItem('filters')));
-  }, []);
+  setSort('price-lowtohigh');
+  const storedFilters = JSON.parse(sessionStorage.getItem('filters'));
+  setFilters(storedFilters || {});
+}, [location.pathname, location.state]); // 👈 THIS is the key
   
   //get data every time user do any action
   useEffect(() => {

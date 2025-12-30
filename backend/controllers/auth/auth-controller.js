@@ -10,12 +10,14 @@ const registerUser = async(req,res)=>{
     try {
         const hashpass = await bcrypt.hash(password,11);
 
-        //checking if the user already existed
-        const existsUser = await User.findOne({email});
+        //checking if the user already existed (email or userName)
+        const existsUser = await User.findOne({ 
+            $or: [{ email }, { userName }] 
+        });
         if(existsUser){
             return res.status(400).json({
                 success : false,
-                message : "account with this email already exists",
+                message : "account with this email or username already exists",
             });
         }
 
@@ -29,6 +31,13 @@ const registerUser = async(req,res)=>{
             message : "registration successfull"
         });
     } catch (error) {
+        // handle duplicate key error defensively
+        if (error && error.code === 11000) {
+            return res.status(400).json({
+                success: false,
+                message: "account with this email or username already exists",
+            });
+        }
         console.log(error);
         return res.status(500).json({
             success : false,
@@ -59,11 +68,26 @@ const loginUser = async(req,res)=>{
             });
         }
 
+        // ensure JWT secret is present
+        const secret ="CLIENT_SECRET_KEY";
+        if (!secret) {
+            console.error('CLIENT_SECRET_KEY env var is missing');
+            return res.status(500).json({
+                success: false,
+                message: 'server auth misconfigured: missing CLIENT_SECRET_KEY'
+            });
+        }
+
         const token = jwt.sign({
             id : checkUser._id , role : checkUser.role, email : checkUser.email, userName: checkUser.userName
-        }, 'CLIENT_SECRET_KEY',{expiresIn : '60m'});
+        }, secret,{expiresIn : '60m'});
 
-        res.cookie("token",token,{httpOnly : true, secure : true, sameSite : 'none'}).json({
+        const isProd = process.env.NODE_ENV === 'production';
+        res.cookie("token",token,{
+            httpOnly : true, 
+            secure : isProd, 
+            sameSite : isProd ? 'none' : 'lax'
+        }).json({
             success : true,
             message : "log in successfull",
             user : {
@@ -102,7 +126,15 @@ const authMiddleware = async (req,res,next)=>{
     }
 
     try {
-        const decode = jwt.verify(token,'CLIENT_SECRET_KEY');
+        const secret = "CLIENT_SECRET_KEY";
+        if (!secret) {
+            console.error('CLIENT_SECRET_KEY env var is missing');
+            return res.status(500).json({
+                success: false,
+                message: 'server auth misconfigured: missing CLIENT_SECRET_KEY'
+            });
+        }
+        const decode = jwt.verify(token,secret);
         req.user = decode;
         next();
     } catch (error) {

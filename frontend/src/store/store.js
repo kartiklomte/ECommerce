@@ -5,6 +5,7 @@ import UserProductSlice from './user/product-slice'
 import shoppingCart from './user/cart-slice'
 import addressSlice from './user/address-slice'
 import userOrderSlice from './user/order-slice'
+import userReviewsSlice from './user/review-slice'
 
 // we will combine all the slices in this
 const  store = configureStore({
@@ -15,6 +16,7 @@ const  store = configureStore({
         shopCart : shoppingCart,
         userAddress : addressSlice,
         userOrder : userOrderSlice,
+        userReviews: userReviewsSlice,
     },
 });
 

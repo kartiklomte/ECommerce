@@ -1,6 +1,6 @@
 import {  LogOut, Menu, ShoppingCart, UserCog } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import logo from '@/assets/logo.jpg'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { Button } from '../ui/button'
@@ -39,7 +39,9 @@ const UserHeader = () => {
 
     sessionStorage.setItem('filters',JSON.stringify(currentFilter));
 
-    navigate(getcurrentMenuItem.path);
+    navigate(getcurrentMenuItem.path, {
+      state: { refresh: Date.now() } // 👈 force update
+    });
   }
 
   // for mapping the header components which will be taken from the userMenuItem array store in index.js in config
@@ -62,7 +64,7 @@ const UserHeader = () => {
     return <div className='flex flex-col lg:flex-row gap-4 lg:items-center'>
 
       {/** shopping card button */}
-      <Sheet open={openCartSheet} onOpenChange={()=>setOpenCartSheet(false)}>
+      <Sheet open={openCartSheet} onOpenChange={setOpenCartSheet}>
         <Button variant='outline' onClick={()=>setOpenCartSheet(true)}>
           <ShoppingCart  className='h-6 w-6'/>
           <span className='sr-only'> User Card</span>

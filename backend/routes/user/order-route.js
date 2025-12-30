@@ -1,9 +1,8 @@
 const express = require('express');
-
-const { createOrder } = require('../../controllers/user/order-controller');
-
 const router = express.Router();
+const orderCtrl = require('../../controllers/user/order-controller');
 
-router.post('/create',createOrder);
-
+router.post('/order', orderCtrl.createRazorpayOrder);
+router.post('/verify', orderCtrl.verifyRazorpayPayment);
+router.post('/create-razorpay', orderCtrl.createRazorpayCheckoutOrder);
 module.exports = router;

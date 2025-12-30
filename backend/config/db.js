@@ -5,7 +5,12 @@ dotenv.config();
 
 const connDB = async ()=>{
     try {
-        const conn = await mongoose.connect(process.env.DBATLAST_URL);
+        const uri = process.env.DBATLAST_URL;
+        if (!uri) {
+            console.error('MongoDB URI missing. Set `DBATLAS_URL` or `MONGODB_URI` in .env');
+            process.exit(1);
+        }
+        await mongoose.connect(uri);
         console.log('mongoDB connected successfully');
     } catch (error) {
         console.log(`${error}`);

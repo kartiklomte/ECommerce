@@ -1,84 +1,105 @@
-const paypal = require('../../config/paypal');
-const Order = require('../../models/Order');
+const crypto = require('crypto');
+const razorpay = require('../../config/razorpay');
+const Order = require('../../models/Order'); // adjust if your Order model path differs
 
-const createOrder = async (req, res) => {
+// create razorpay order
+exports.createRazorpayOrder = async (req, res) => {
   try {
-    const {userId,cartItems,addressInfo,orderStatus,paymentMethod,paymentStatus,totalAmount,orderDate,orderUpdateDate,paymentId,playerId,} = req.body;
-    
+    const { amount, currency = 'INR', receiptId } = req.body;
+    if (!amount) return res.status(400).json({ message: 'Amount required' });
 
-    const create_payment_json = {
-        intent: 'sale',
-        payer: {
-            payment_method: 'paypal'
-        },
-        redirect_urls: {
-            return_url:"http://localhost:5173/user/paypal-return",
-            cancel_url: "http://localhost:5173/user/paypal-cancel"
-        },
-        transactions: [{
-            item_list: {
-              items: cartItems.map((item) => ({
-                name: item.title,
-                sku: item.productId,
-                price: item.price.toFixed(2),
-                currency: "USD",
-                quantity: item.quantity,
-              })),
-          },
-            amount: {
-            currency: "USD",
-            total: totalAmount.toFixed(2),
-          },
-            description: "This is the payment description.",
-        }]
+    const options = {
+      amount: Math.round(Number(amount) * 100), // paise
+      currency,
+      receipt: receiptId || `rcpt_${Date.now()}`,
+      payment_capture: 1,
     };
-    
-    
-    paypal.payment.create(create_payment_json, async(error, paymentInfo)=>{
-      if (error) {
-        return res.status(500).json({
-          success: false,
-          message: "Error while creating paypal payment",
-        });
-      } else {
-           // 2. Save in Database
-        const newlyCreatedOrder = new Order({userId,cartItems,addressInfo,orderStatus,paymentMethod,paymentStatus,totalAmount,orderDate,orderUpdateDate,paymentId,playerId,});
 
-        await newlyCreatedOrder.save();
-
-        // 3. Get approval link for client
-        const approvalURL = paymentInfo.links.find((link) => link.rel === "approval_url").href;
-
-        res.status(201).json({
-          success: true,
-          approvalURL,
-          orderId: newlyCreatedOrder._id,
-        });
-        }
-    });
-
-    
-    
-  } catch (error) {
-    console.error("PayPal createOrder error:", error);
-    res.status(500).json({
-      success: false,
-      message: "create order failed",
-    });
+    const rOrder = await razorpay.orders.create(options);
+    return res.json({ order: rOrder });
+  } catch (err) {
+    console.error('createRazorpayOrder', err);
+    return res.status(500).json({ message: 'Razorpay order creation failed' });
   }
 };
 
-const capturePayment = async(req,res)=>{
-    try {
-        
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            message: "order detail not got"
-        });
-        
-    }
-}
+// Create DB order and Razorpay order in one step (frontend calls this)
+exports.createRazorpayCheckoutOrder = async (req, res) => {
+  try {
+    const {
+      userId,
+      cartItems,
+      addressInfo,
+      totalAmount,
+    } = req.body;
 
-module.exports = { createOrder };
+    if (!userId || !Array.isArray(cartItems) || !addressInfo || !totalAmount) {
+      return res.status(400).json({ message: 'Invalid order data' });
+    }
+
+    const newOrder = await Order.create({
+      userId,
+      cartItems,
+      addressInfo,
+      orderStatus: 'pending',
+      paymentMethod: 'razorpay',
+      paymentStatus: 'pending',
+      totalAmount,
+      orderDate: new Date(),
+      orderUpdateDate: new Date(),
+      paymentId: '',
+      playerId: '',
+    });
+
+    const options = {
+      amount: Math.round(Number(totalAmount) * 100),
+      currency: 'INR',
+      receipt: `rcpt_${newOrder._id}`,
+      payment_capture: 1,
+    };
+    const rOrder = await razorpay.orders.create(options);
+
+    await Order.findByIdAndUpdate(newOrder._id, {
+      paymentId: rOrder.id,
+      orderUpdateDate: new Date(),
+    });
+
+    return res.json({ order: rOrder, dbOrderId: newOrder._id });
+  } catch (err) {
+    console.error('createRazorpayCheckoutOrder', err);
+    return res.status(500).json({ message: 'Failed to create checkout order' });
+  }
+};
+
+// verify payment coming from frontend
+exports.verifyRazorpayPayment = async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } = req.body;
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ message: 'Missing payment fields' });
+    }
+
+    const generated_signature = crypto
+      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || '')
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest('hex');
+
+    if (generated_signature !== razorpay_signature) {
+      return res.status(400).json({ valid: false, message: 'Invalid signature' });
+    }
+
+    if (orderId) {
+      await Order.findByIdAndUpdate(orderId, {
+        paymentStatus: 'paid',
+        orderStatus: 'confirmed',
+        paymentId: razorpay_payment_id,
+        orderUpdateDate: new Date(),
+      });
+    }
+
+    return res.json({ valid: true });
+  } catch (err) {
+    console.error('verifyRazorpayPayment', err);
+    return res.status(500).json({ message: 'Verification failed' });
+  }
+}
