@@ -16,7 +16,7 @@ const ProductDashboard = ({product,setCurrentEditedId,setOpenCreateProduct,setFo
   return (
     <Card className='w-full max-w-sm mx-auto pt-0 hover:shadow-2xl hover:scale-105'>
         <div className=''>
-            <img src={product?.image} alt={product?.title} className='w-full h-[350px] object-cover rounded-t-lg' />
+            <img src={product?.image} alt={product?.title} className='w-full h-[350px] object-cover rounded-t-lg' loading="lazy" />
         </div>
         <CardContent>
             <h2 className='text-xl font-bold mb-2'>{product?.title}</h2>

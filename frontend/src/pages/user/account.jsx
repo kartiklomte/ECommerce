@@ -10,7 +10,7 @@ const UserAccount = () => {
     <div className='flex flex-col'>
        {/* top image */}
       <div className='relative h-[350px] w-full overflow-hidden'>
-        <img src={account} className='h-full w-full object-cover object-center' />
+        <img src={account} className='h-full w-full object-cover object-center' loading="lazy" />
       </div>
 
       {/*div for listing orders and address*/}

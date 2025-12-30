@@ -32,7 +32,7 @@ const CartItemContainer = ({cartItems}) => {
 
   return (
     <div className='flex items-center space-x-4'>
-      <img src={cartItems?.image} alt={cartItems.title} className='w-20 h-20 object-cover' />
+      <img src={cartItems?.image} alt={cartItems.title} className='w-20 h-20 object-cover' loading="lazy" />
 
       <div className='flex-1'>
         <h3 className='font-extrabold'>{cartItems?.title}</h3>

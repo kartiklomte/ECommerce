@@ -10,7 +10,7 @@ const ProductDashboard = ({product, handleProductDetails, handleAddToCard}) => {
     <Card className='w-full max-w-sm pt-0 mx-auto hover:scale-101 hover:shadow-2xl'>
         <div onClick={()=>handleProductDetails(product?._id)} className=''>
             <div className='relative'>
-                <img src={product?.image} alt={product?.title} className='w-full h-[370px] object-cover rounded-t-lg'/>
+                <img src={product?.image} alt={product?.title} className='w-full h-[370px] object-cover rounded-t-lg' loading="lazy"/>
                 {
                     product?.salePrice > 0 ?
                     <Badge className='absolute top-2 left-2 bg-red-500 hover:bg-red-600'>

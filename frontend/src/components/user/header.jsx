@@ -111,7 +111,7 @@ const UserHeader = () => {
 
         {/* logo of the header */}
         <Link to='/user/home' className='flex items-center p-1 gap-2 rounded-full bg-[#CEF0FF]'>
-          <img src={logo} className='h-12 hadow-2xl'/>
+          <img src={logo} className='h-12 hadow-2xl' loading="lazy"/>
         </Link>
 
         {/* component rendering  for small screens*/}

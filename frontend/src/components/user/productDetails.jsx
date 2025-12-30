@@ -111,7 +111,7 @@ const ProductDetails = ({open,setOpen, productDetails}) => {
         
         {/* left side section(image) */}
         <div className=' relative overflow-hidden rounded-lg'>
-          <img src={productDetails?.image} alt={productDetails?.title} width={600} height={600} className='aspect-auto lg:aspect-square w-full object-cover' />
+          <img src={productDetails?.image} alt={productDetails?.title} width={600} height={600} className='aspect-auto lg:aspect-square w-full object-cover' loading="lazy" />
         </div>
 
         {/** right side section */}

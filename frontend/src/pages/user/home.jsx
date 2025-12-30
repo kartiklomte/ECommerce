@@ -113,15 +113,15 @@ const UserHome = () => {
     <div className='flex flex-col min-h-screen'>
 
       <div className='w-fit shadow-2xl mb-0.5 relative'>
-        <img src={banner} alt="banner" className='z-50'/>
-        <img src={offer} alt="offer" className='absolute h-full z-10 right-[22%] top-3 animate-bounce'/>
+        <img src={banner} alt="banner" className='z-50' loading="lazy"/>
+        <img src={offer} alt="offer" className='absolute h-full z-10 right-[22%] top-3 animate-bounce' loading="lazy"/>
       </div>
 
       {/** posters div */}
       <div className='relative w-full h-[25vh] md:h-[60vh] lg:h-[90vh] bg-purple-300 overflow-hidden'>
         {
           slides.map((slide,index)=> 
-            <img src={slide} key={index} className={`${index === currentSlide ? 'opacity-100': 'opacity-0'} absolute top-0 left-0 w-full h-full object-fill lg:object-cover transition-opacity duration-1000`} />  
+            <img src={slide} key={index} className={`${index === currentSlide ? 'opacity-100': 'opacity-0'} absolute top-0 left-0 w-full h-full object-fill lg:object-cover transition-opacity duration-1000`} loading="lazy" />  
           )
         }
 
@@ -157,7 +157,7 @@ const UserHome = () => {
       {/** shop by brand section */}
       <section className=' bg-gray-50 w-full flex flex-row overflow-hidden'>
         <div className='hidden lg:flex'>
-          <img src={brandbg} alt="" className='w-fit h-full absolute z-10'/>
+          <img src={brandbg} alt="" className='w-fit h-full absolute z-10' loading="lazy"/>
         </div>
         <div className=' pt-5 container lg:ml-[30%] sm:mx-auto px-8 w-full z-50'>
           <h2 className='text-3xl font-bold text-center mb-2.5'>Shop By Brand</h2>
@@ -165,7 +165,7 @@ const UserHome = () => {
             {
               brand.map(catagoryItem => <Card key={catagoryItem.id} onClick={()=>handleNavigationToListPage(catagoryItem,'brand')} className={'cursor-pointer hover:shadow-lg transition-shadow bg-blue-200'}>
                 <CardContent className={'flex flex-col items-center justify-center bg-blue-200 m-auto'}>
-                  <img src={catagoryItem.icon} alt={catagoryItem.label} className='w-full mb-4 text-primary bg-blue-200' />
+                  <img src={catagoryItem.icon} alt={catagoryItem.label} className='w-full mb-4 text-primary bg-blue-200' loading="lazy" />
                 </CardContent>
               </Card>)
             }
