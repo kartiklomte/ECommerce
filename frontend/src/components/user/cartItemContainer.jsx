@@ -1,33 +1,30 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Button } from '../ui/button'
 import { Minus, Plus, Trash } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteCardItem, updateCartItemQty } from '@/store/user/cart-slice'
+import { deleteCartItem, updateCartItemQty } from '@/store/user/cart-slice'
 import { toast } from 'react-toastify';
-import { Item } from '@radix-ui/react-dropdown-menu'
 
-const CartItemContainer = ({cartItems}) => {
+const CartItemContainer = memo(({cartItems}) => {
   const dispatch = useDispatch()
 
   const {user} = useSelector(state=>state.auth);
 
-  function handleItemCardDelete(getCartItems){    
-    dispatch(deleteCardItem({userId : user.id, productId : getCartItems.productId}));
-    toast.success('Item removed from card');
+  function handleItemCardDelete(getCartItems){
+    dispatch(deleteCartItem({userId : user.id, productId : getCartItems.productId}));
+    toast.success('Item removed from cart');
   }
 
   function handleItemQtyDes(getCartItems){
-    if(getCartItems?.quantity > 1)
-      dispatch(updateCartItemQty({userId : user.id, productId : getCartItems.productId , quantity : getCartItems?.quantity-1})) 
-    else
-      null
+    if(getCartItems?.quantity > 1) {
+      dispatch(updateCartItemQty({userId : user.id, productId : getCartItems.productId , quantity : getCartItems?.quantity-1}))
+    }
   }
 
   function handleItemQtyInc(getCartItems){
-    if(getCartItems?.quantity < 100)
-      dispatch(updateCartItemQty({userId : user.id, productId : getCartItems.productId , quantity : getCartItems?.quantity+1})) 
-    else
-      null
+    if(getCartItems?.quantity < 100) {
+      dispatch(updateCartItemQty({userId : user.id, productId : getCartItems.productId , quantity : getCartItems?.quantity+1}))
+    }
   }
 
   return (
@@ -59,6 +56,6 @@ const CartItemContainer = ({cartItems}) => {
       
     </div>
   )
-}
+})
 
 export default CartItemContainer
