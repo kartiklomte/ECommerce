@@ -54,11 +54,11 @@ const updateCartItemQty = createAsyncThunk('cart/updateCartItemQty',async({userI
         }
 });
 
-const deleteCardItem = createAsyncThunk('cart/deleteCartItem',async({userId,productId},thunkAPI)=>{
+const deleteCartItem = createAsyncThunk('cart/deleteCartItem',async({userId,productId},thunkAPI)=>{
     try {
             const response = await axios.delete(
                 `${import.meta.env.VITE_BACKEND_SERVER}/api/user/cart/${userId}/${productId}`,
-                { 
+                {
                     withCredentials: true,
                 }
             );
@@ -69,57 +69,65 @@ const deleteCardItem = createAsyncThunk('cart/deleteCartItem',async({userId,prod
 }) 
 
 const userCartSlice = createSlice({
-    name: 'shopingCart',
+    name: 'shoppingCart',
     initialState,
     reducers : {},
     extraReducers : (builder) => {
         builder
             .addCase(addToCart.pending,(state)=>{
-                state.isLoading = true
+                state.isLoading = true;
             })
             .addCase(addToCart.fulfilled,(state,action)=>{
-                state.isLoading = false,
-                state.cartItems = action.payload.data
+                state.isLoading = false;
+                state.cartItems = action.payload.data;
             })
             .addCase(addToCart.rejected,(state)=>{
-                state.isLoading = false,
-                state.cartItems = []
+                state.isLoading = false;
             })
             .addCase(fetchCartItems.pending,(state)=>{
-                state.isLoading = true
+                state.isLoading = true;
             })
             .addCase(fetchCartItems.fulfilled,(state,action)=>{
-                state.isLoading = false,
-                state.cartItems = action.payload.data
+                state.isLoading = false;
+                state.cartItems = action.payload.data;
             })
             .addCase(fetchCartItems.rejected,(state)=>{
-                state.isLoading = false,
-                state.cartItems = []
+                state.isLoading = false;
+                state.cartItems = [];
             })
-            .addCase(updateCartItemQty.pending,(state)=>{
-                state.isLoading = true
+            // Optimistic update for quantity change
+            .addCase(updateCartItemQty.pending,(state, action)=>{
+                const { productId, quantity } = action.meta.arg;
+                if (state.cartItems?.items) {
+                    const item = state.cartItems.items.find(item => item.productId === productId);
+                    if (item) {
+                        item.quantity = quantity;
+                    }
+                }
             })
             .addCase(updateCartItemQty.fulfilled,(state,action)=>{
-                state.isLoading = false,
-                state.cartItems = action.payload.data
+                state.isLoading = false;
+                state.cartItems = action.payload.data;
             })
             .addCase(updateCartItemQty.rejected,(state)=>{
-                state.isLoading = false,
-                state.cartItems = []
+                state.isLoading = false;
             })
-            .addCase(deleteCardItem.pending,(state)=>{
-                state.isLoading = false
+            // Optimistic update for delete
+            .addCase(deleteCartItem.pending,(state, action)=>{
+                const { productId } = action.meta.arg;
+                if (state.cartItems?.items) {
+                    state.cartItems.items = state.cartItems.items.filter(item => item.productId !== productId);
+                }
             })
-            .addCase(deleteCardItem.fulfilled,(state,action)=>{
-                state.isLoading = false,
-                state.cartItems = action.payload.data
+            .addCase(deleteCartItem.fulfilled,(state,action)=>{
+                state.isLoading = false;
+                state.cartItems = action.payload.data;
             })
-            .addCase(deleteCardItem.rejected,(state)=>{
-                state.isLoading = false,
-                state.cartItems = []
+            .addCase(deleteCartItem.rejected,(state)=>{
+                state.isLoading = false;
             })
     }
 })
 
 export default userCartSlice.reducer;
-export {addToCart, fetchCartItems, updateCartItemQty, deleteCardItem}
+export {addToCart, fetchCartItems, updateCartItemQty, deleteCartItem}
